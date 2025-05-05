@@ -4,7 +4,9 @@ const app = new Hono()
 
 app.get('/:code/*', async (c) => {
   const code = c.req.param('code');
-  const restPath = c.req.param('*') || '';
+  const fullPath = c.req.path;
+  const restPath = fullPath.substring(fullPath.indexOf(code) + code.length + 1) || '';
+  // console.log(`Code: ${code}, Rest Path: ${restPath}`);
   let targetUrl = '';
 
   if (code === 'me') {
@@ -14,7 +16,6 @@ app.get('/:code/*', async (c) => {
   } else {
     targetUrl = `https://tamatar.store/xyz/${code}/${restPath}`;
   }
-
   return c.redirect(targetUrl, 307);
 });
 
